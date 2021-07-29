@@ -1,13 +1,19 @@
 const container = document.getElementById("container")
+const finalScoreContainer = document.getElementById("final_score")
+
 const context = container.getContext('2d')
+const finalScoreContext = finalScoreContainer.getContext('2d')
 
 container.width = 800
 container.height = 500
-context.font = "40px Georgia"
+context.font = "25px Georgia"
+finalScoreContext.font = "35px Georgia bold"
 
 let score = 0
+let highScore = 0
 let gameFrame = 0
 let position = container.getBoundingClientRect()
+let status = "START"
 
 const mouse = {
     x: container.width/2,
@@ -25,12 +31,12 @@ container.addEventListener('mouseup', function (){
     mouse.click = false
 })
 
-
+let playerRandomNumber = Math. round(Math.random())
 const playerLeft = new Image()
-playerLeft.src = 'assets/player/fish_swim_left.png'
+playerLeft.src = playerRandomNumber % 2 == 0 ? 'assets/player/fish_001_left.png' : 'assets/player/fish_002_left.png'
 
 const playerRight = new Image()
-playerRight.src = 'assets/player/fish_swim_right.png'
+playerRight.src = playerRandomNumber % 2 == 0 ? 'assets/player/fish_001_right.png' : 'assets/player/fish_002_right.png'
 
 class Player {
     constructor() {
@@ -151,13 +157,53 @@ function handleBubbles() {
 
 function animate() {
     context.clearRect(0, 0, container.width, container.height)
-    handleBubbles()
     player.update()
     player.draw()
     context.fillStyle = "red"
-    context.fillText('score : '+ score, 10, 50)
-    gameFrame++ 
+    context.fillText('Score : '+ score, 10, 50)
+    context.fillText('High Score : '+ highScore, 600, 50)
+    if (status == "PLAYING") {
+        handleBubbles()
+        gameFrame++ 
+    }
     requestAnimationFrame(animate)
 }
 
 animate()
+
+function startGame() {
+    finalScoreContext.clearRect(0, 0 , finalScoreContainer.width, finalScoreContainer.height)
+    if (status == "START") {
+        status = "PLAYING"
+        initialState()
+    }
+}
+
+function restartGame() {
+    status = "PLAYING"
+    initialState()
+    finalScoreContext.clearRect(0, 0 , finalScoreContainer.width, finalScoreContainer.height)
+}
+
+function endGame() {
+    if (status == "PLAYING") {
+        status = "START"
+        finalScoreContext.fillStyle = "red"
+        finalScoreContext.fillText('Your Final Score : '+ score, 0, 60)
+        if (score > highScore) highScore = score
+        score = 0
+        initialState()
+    }
+}
+
+function initialState() {
+    player.x = container.width
+    player.y = container.height/2
+    player.angle = 0
+    mouse.x = container.width/2,
+    mouse.y = container.height/2,
+    mouse.click = false
+    bubblesArray = []
+    gameFrame = 0
+    score = 0
+}

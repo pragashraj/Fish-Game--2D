@@ -10,6 +10,68 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-direction: column;
+}
+
+.btn_block {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 20px;
+    align-items: center;
+    justify-content: space-between;
+    width: 800px;
+}
+
+.primary-btn {
+    display: inline-block;
+    font-size: 15px;
+    font-family: "Play", sans-serif;
+    font-weight: 700;
+    padding: 14px 32px 12px;
+    color: #ffffff;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    position: relative;
+    z-index: 1;
+    color: #6b4eeb;
+    text-decoration: none;
+    background-color: transparent;
+    margin-top: 15px;
+    cursor: pointer;
+}
+
+.primary-btn:hover {
+    color: red;
+}
+
+.primary-btn:before {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 30px;
+    width: 30px;
+    border-left: 2px solid #6b4eeb;
+    border-top: 2px solid #6b4eeb;
+    content: "";
+    z-index: -1;
+    -webkit-transition: all, 0.7s;
+    -o-transition: all, 0.7s;
+    transition: all, 0.7s;
+}
+
+.primary-btn:after {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    height: 30px;
+    width: 30px;
+    border-right: 2px solid #6b4eeb;
+    border-bottom: 2px solid #6b4eeb;
+    content: "";
+    z-index: -1;
+    -webkit-transition: all, 0.7s;
+    -o-transition: all, 0.7s;
+    transition: all, 0.7s;
 }
 
 #container {
@@ -20,4 +82,16 @@ body {
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
+}
+
+#final_score_root {
+    height: 80px;
+    width: 800px;
+    display: flex;
+}
+
+#final_score {
+    height: 100%;
+    font-weight: bold;
+    font-size: 1.5rem;
 }
