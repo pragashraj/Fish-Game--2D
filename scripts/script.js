@@ -14,8 +14,10 @@ let highScore = 0
 let gameFrame = 0
 let position = container.getBoundingClientRect()
 let status = "START"
+let isDead = false
 
 let bubblesArray = []
+let obstacleArray = []
 
 const bubblePob1 = document.createElement('audio')
 bubblePob1.src = 'assets/sounds/sound1.mp3'
@@ -64,6 +66,24 @@ function handleBubbles() {
     }
 }
 
+function handleObstacles() {
+    if (gameFrame % 150 == 0) {
+        obstacleArray.push(new Obstacle(container, context, player))
+    }
+
+    for (let i = 0; i < obstacleArray.length; i++) {
+        obstacleArray[i].update()
+        obstacleArray[i].draw()
+        if (obstacleArray[i].y < 0 - obstacleArray[i].radius * 2) {
+            obstacleArray.splice(i, 1)
+        }
+        if (obstacleArray[i] && obstacleArray[i].distance < obstacleArray[i].radius + player.radius) {
+            isDead = true
+            endGame()
+        }
+    }
+}
+
 function animate() {
     context.clearRect(0, 0, container.width, container.height)
     player.update()
@@ -71,8 +91,9 @@ function animate() {
     context.fillStyle = "red"
     context.fillText('Score : '+ score, 10, 50)
     context.fillText('High Score : '+ highScore, 600, 50)
-    if (status == "PLAYING") {
+    if (status == "PLAYING" && !isDead) {
         handleBubbles()
+        handleObstacles()
         gameFrame++ 
     }
     requestAnimationFrame(animate)
@@ -99,6 +120,7 @@ function endGame() {
         finalScoreContext.fillText('Your Final Score : '+ score, 0, 60)
         if (score > highScore) highScore = score
         score = 0
+        isDead = false
         initialState()
     }
 }
@@ -113,6 +135,7 @@ function initialState() {
     bubblesArray = []
     gameFrame = 0
     score = 0
+    isDead = false
 }
 
 animate()
