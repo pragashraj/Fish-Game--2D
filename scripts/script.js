@@ -80,6 +80,7 @@ function handleObstacles() {
         if (obstacleArray[i] && obstacleArray[i].distance < obstacleArray[i].radius + player.radius) {
             isDead = true
             endGame()
+            alert("Game End. you lost!")
         }
     }
 }
