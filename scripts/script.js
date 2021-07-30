@@ -15,6 +15,14 @@ let gameFrame = 0
 let position = container.getBoundingClientRect()
 let status = "START"
 
+let bubblesArray = []
+
+const bubblePob1 = document.createElement('audio')
+bubblePob1.src = 'assets/sounds/sound1.mp3'
+
+const bubblePob2 = document.createElement('audio')
+bubblePob2.src = 'assets/sounds/sound2.mp3'
+
 const mouse = {
     x: container.width/2,
     y: container.height/2,
@@ -31,110 +39,11 @@ container.addEventListener('mouseup', function (){
     mouse.click = false
 })
 
-let playerRandomNumber = Math. round(Math.random())
-const playerLeft = new Image()
-playerLeft.src = playerRandomNumber % 2 == 0 ? 'assets/player/fish_001_left.png' : 'assets/player/fish_002_left.png'
-
-const playerRight = new Image()
-playerRight.src = playerRandomNumber % 2 == 0 ? 'assets/player/fish_001_right.png' : 'assets/player/fish_002_right.png'
-
-class Player {
-    constructor() {
-        this.x = container.width
-        this.y = container.height/2
-        this.radius = 50
-        this.angle = 0
-        this.frameX = 0
-        this.frameY = 0
-        this.frame = 0
-        this.spriteWidth = 490
-        this.spriteHeight = 330
-    }
-
-    update() {
-        const dx = this.x - mouse.x
-        const dy = this.y - mouse.y
-        this.angle = Math.atan2(dy, dx)
-        if (mouse.x != this.x) {
-            this.x -= dx/30
-        }
-
-        if (mouse.y != this.y) {
-            this.y -= dy/30
-        }
-    }
-
-    draw() {
-        if (mouse.click) {
-            context.lineWidth = 0.2
-            context.beginPath()
-            context.moveTo(this.x, this.y)
-            context.lineTo(mouse.x, mouse.y)
-            context.stroke()
-        }
-        context.fillStyle = "transparent"
-        context.beginPath()
-        context.arc(this.x, this.y, this.radius, 0, Math.PI * 2)
-        context.fill()
-        context.closePath()
-        context.fillRect(this.x, this.y, this.radius, 10)
-
-        context.save()
-        context.translate(this.x, this.y)
-        context.rotate(this.angle)
-        if (this.x >= mouse.x)
-        context.drawImage(playerLeft, this.frameX * this.spriteWidth, this.frameY * this.spriteHeight, this.spriteWidth, this.spriteHeight, 0 - 60, 0 - 45, this.spriteWidth/4, this.spriteHeight/4)
-        else
-        context.drawImage(playerRight, this.frameX * this.spriteWidth, this.frameY * this.spriteHeight, this.spriteWidth, this.spriteHeight, 0 - 60, 0 - 45, this.spriteWidth/4, this.spriteHeight/4)
-
-        context.restore()
-    }
-}
-
-const player = new Player()
-
-const bubblesArray = []
-
-const bubbleImg = new Image()
-bubbleImg.src = 'assets/bubble/bubble.png'
-class Bubble {
-    constructor() {
-        this.x = Math.random() * container.width
-        this.y = container.height + 100
-        this.radius = 50
-        this.speed = Math.random() * 5 + 1
-        this.distance = 0
-        this.counted = false
-        this.sound = Math.random() <= 0.5 ? 'sound1' : 'sound2'
-    } 
-
-    update() {
-        this.y -= this.speed
-        const dx = this.x - player.x
-        const dy = this.y - player.y
-        this.distance = Math.sqrt(dx*dx + dy*dy)
-    }
-
-    draw() {
-        context.fillStyle = "rgb(121, 245, 245)"
-        context.beginPath()
-        context.arc(this.x, this.y, this.radius, 0, Math.PI * 2)
-        context.fill()
-        context.closePath()
-        context.stroke()
-        context.drawImage(bubbleImg, this.frameX * this.spriteWidth, this.frameY * this.spriteHeight, this.spriteWidth, this.spriteHeight, this.x, this.y, this.spriteWidth/4, this.spriteHeight/4)
-    }
-}
-
-const bubblePob1 = document.createElement('audio')
-bubblePob1.src = 'assets/sounds/sound1.mp3'
-
-const bubblePob2 = document.createElement('audio')
-bubblePob2.src = 'assets/sounds/sound2.mp3'
+const player = new Player(container, mouse, context)
 
 function handleBubbles() {
     if (gameFrame % 50 == 0) {
-        bubblesArray.push(new Bubble())
+        bubblesArray.push(new Bubble(container, context, player))
     }
 
     for (let i = 0; i < bubblesArray.length; i++) {
@@ -168,8 +77,6 @@ function animate() {
     }
     requestAnimationFrame(animate)
 }
-
-animate()
 
 function startGame() {
     finalScoreContext.clearRect(0, 0 , finalScoreContainer.width, finalScoreContainer.height)
@@ -207,3 +114,5 @@ function initialState() {
     gameFrame = 0
     score = 0
 }
+
+animate()
