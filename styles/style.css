@@ -24,6 +24,7 @@ body {
     align-items: center;
     justify-content: space-between;
     width: 800px;
+    z-index: 2;
 }
 
 .primary-btn {

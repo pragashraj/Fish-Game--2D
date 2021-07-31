@@ -109,9 +109,14 @@ function startGame() {
 }
 
 function restartGame() {
-    status = "PLAYING"
-    initialState()
-    finalScoreContext.clearRect(0, 0 , finalScoreContainer.width, finalScoreContainer.height)
+    window.confirm("Are sure to restart the game?")
+    if (confirm("Please confirm!")) {
+        status = "PLAYING"
+        initialState()
+        finalScoreContext.clearRect(0, 0 , finalScoreContainer.width, finalScoreContainer.height)
+    } else {
+        console.log("You pressed Cancel!")
+    }
 }
 
 function endGame() {
